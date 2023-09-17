@@ -28,7 +28,7 @@ import jakarta.validation.constraints.Pattern;
 public class EmployeController {
 	@Autowired
 	private EmployeeService empservice;
-	
+	//for getting all active employees
 	@GetMapping("/activeEmployes/{id}")
 	public ResponseEntity<List<Employee>> getActiveEmployeesByHr(@Valid @PathVariable Long id) throws UserNotFoundException{
 		return new ResponseEntity<List<Employee>>(empservice.getAllActiveEmployees(id),HttpStatus.OK);
