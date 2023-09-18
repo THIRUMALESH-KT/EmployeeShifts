@@ -35,7 +35,7 @@ public class EmployeController {
 		//
 	}
 	@GetMapping("/inactiveEmployes/{id}")
-	public ResponseEntity<List<Employee>> getInactiveEmployeesByHr( @PathVariable @Pattern(regexp = "^222$",message = "Hr kakara") Long id)throws UserNotFoundException{
+	public ResponseEntity<List<Employee>> getInactiveEmployeesByHr( @PathVariable Long id)throws UserNotFoundException{
 		return new ResponseEntity<List<Employee>>(empservice.getAllInActiveEmployees(id),HttpStatus.OK);
 	}
 
