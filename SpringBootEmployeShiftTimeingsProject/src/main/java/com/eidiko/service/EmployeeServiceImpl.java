@@ -167,4 +167,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 //		else throw new UserNotFoundException("employe id is not found");
 		return getEmployeeById(employeeId,Hr);
 }
+	@Override
+	public List<ShiftTiming> getAllEmployeShifts(Long hr) throws UserNotFoundException {
+		// TODO Auto-generated method stub
+		if(hr==222) {
+		return shiftTimingRepository.findAll();
+		}else throw new UserNotFoundException("Only Hr can do operation on All Employee Shifts");
+	}
 }

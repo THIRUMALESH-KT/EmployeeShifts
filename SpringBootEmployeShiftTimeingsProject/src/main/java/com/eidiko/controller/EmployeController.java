@@ -85,5 +85,8 @@ public class EmployeController {
 	}@GetMapping("/listShiftTimingById/{id}")
 	public ResponseEntity<Employee> listShiftByEmploye(@PathVariable Long id,@PathVariable(required = false) Long Hr) throws UserNotFoundException{
 		return new ResponseEntity<Employee>(empservice.getShiftTimingsByEmployee(id,Hr),HttpStatus.OK);
+	}@GetMapping("/listAllShifts/{Hr}")
+	public ResponseEntity<List<ShiftTiming>> listAllShifts(@PathVariable Long Hr)throws UserNotFoundException{
+		return new ResponseEntity<List<ShiftTiming>>(empservice.getAllEmployeShifts(Hr),HttpStatus.OK);
 	}
 }
