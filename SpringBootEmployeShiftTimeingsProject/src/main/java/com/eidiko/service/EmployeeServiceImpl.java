@@ -174,4 +174,17 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return shiftTimingRepository.findAll();
 		}else throw new UserNotFoundException("Only Hr can do operation on All Employee Shifts");
 	}
+	@Override
+	public Employee updateShift(Long id, Long shiftId, Long hr, ShiftTimingUserRequest shiftTiming) throws UserNotFoundException {
+		// TODO Auto-generated method stub
+		Employee employee=getEmployeeById(id, hr);
+		if(hr!=null) {
+			
+		}else {
+			ShiftTiming shiftTiming2=shiftTimingRepository.findById(shiftId).orElseThrow(()->throw new UserNotFoundException("invalid shift id"));
+			shiftTiming2.setEndDate(shiftTiming.getEndDate());
+			shiftTiming2.setModifiedBy(id);
+		}
+		return null;
+	}
 }

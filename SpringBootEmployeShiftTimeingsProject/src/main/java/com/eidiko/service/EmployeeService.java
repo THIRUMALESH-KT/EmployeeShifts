@@ -21,4 +21,5 @@ public interface EmployeeService {
 	 public Employee addShiftTimingToEmployee(Long employeeId,Long hr, List<ShiftTimingUserRequest> shiftTiming) throws UserNotFoundException;
 	 public Employee getShiftTimingsByEmployee(Long employeeId,Long Hr) throws UserNotFoundException;
 	public List<ShiftTiming> getAllEmployeShifts(Long hr)throws UserNotFoundException;
+	public Employee updateShift(Long id, Long shiftId,Long hr, ShiftTimingUserRequest shiftTiming) throws UserNotFoundException;
 }
