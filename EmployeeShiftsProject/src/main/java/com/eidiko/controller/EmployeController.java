@@ -106,5 +106,9 @@ public class EmployeController {
 			public ResponseEntity<List<ShiftTiming>> NightShifts(){
 				return new ResponseEntity<List<ShiftTiming>>(empservice.getAllNightShifts(),HttpStatus.OK);
 			}
+	@GetMapping("/getShiftByShiftId/{id}")
+	public ResponseEntity<ShiftTiming> GetShift(@PathVariable Long id)throws UserNotFoundException{
+		return new ResponseEntity<ShiftTiming>(empservice.getShiftByid(id),HttpStatus.OK);
+	}
 		
 }

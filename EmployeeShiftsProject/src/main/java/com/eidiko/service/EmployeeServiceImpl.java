@@ -230,4 +230,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 		// TODO Auto-generated method stub
 		return shiftTimingRepository.findByShiftStartTime(LocalTime.parse("07:00:00"));
 	}
+	@Override
+	public ShiftTiming getShiftByid(Long id) throws UserNotFoundException {
+		// TODO Auto-generated method stub
+		return shiftTimingRepository.findById(id).orElseThrow(()->new UserNotFoundException("id not found"));
+	}
 }

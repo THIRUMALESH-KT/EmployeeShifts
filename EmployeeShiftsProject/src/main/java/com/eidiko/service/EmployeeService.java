@@ -24,4 +24,5 @@ public interface EmployeeService {
 	public ShiftTiming updateShift(Long id, ShiftTimingUserRequest shiftTiming) throws UserNotFoundException;
 	public List<ShiftTiming> getAllDayShifts();
 	public List<ShiftTiming> getAllNightShifts();
+	public ShiftTiming getShiftByid(Long id) throws UserNotFoundException;
 }
