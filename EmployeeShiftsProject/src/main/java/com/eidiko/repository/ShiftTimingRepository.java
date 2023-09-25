@@ -1,6 +1,5 @@
 package com.eidiko.repository;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -15,6 +14,7 @@ public interface ShiftTimingRepository extends JpaRepository<ShiftTiming, Long> 
 	// TODO Auto-generated method stub
 
 List<ShiftTiming> findByShiftStartTime(LocalTime localTime );
+
 
 
 }

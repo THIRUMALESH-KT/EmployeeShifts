@@ -9,5 +9,10 @@ import com.eidiko.entity.Employee;
 
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     List<Employee> findByStatusAndIsDeleted(String status, boolean isDeleted);
-   
+    @Query("SELECT e FROM Employee e JOIN e.shiftTimings s " +
+    	       "WHERE CURDATE() BETWEEN s.startDate AND s.endDate " +
+    	       "AND CURDATE() <= s.endDate " + 
+    	       "AND e.status = :status AND e.isDeleted = :isDeleted")
+    List<Employee> findByStatusAndIsDeletedd(String status,boolean isDeleted);
+
 }
