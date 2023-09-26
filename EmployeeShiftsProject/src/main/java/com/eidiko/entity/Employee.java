@@ -4,11 +4,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
@@ -17,9 +14,6 @@ import lombok.Data;
 
 @Entity
 @Data
-
-//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-
 public class Employee {
 
 	  @Id
@@ -33,9 +27,10 @@ public class Employee {
 	    private String status; // active or inactive
 	    private boolean isDeleted;
 	    private String about;
-
+	    @ElementCollection(fetch = FetchType.EAGER)
+	    private List<String> designations;
+	    private String password;
 	    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	    @JsonManagedReference 
 	    private List<ShiftTiming> shiftTimings = new ArrayList<>();
 
 		public Employee() {
@@ -126,6 +121,22 @@ public class Employee {
 
 		public void setShiftTimings(List<ShiftTiming> shift) {
 			this.shiftTimings =  shift;
+		}
+
+		public List<String> getDesignations() {
+			return designations;
+		}
+
+		public void setDesignations(List<String> designations) {
+			this.designations = designations;
+		}
+
+		public String getPassword() {
+			return password;
+		}
+
+		public void setPassword(String password) {
+			this.password = password;
 		}
  
 }

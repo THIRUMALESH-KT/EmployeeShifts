@@ -14,5 +14,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     	       "AND CURDATE() <= s.endDate " + 
     	       "AND e.status = :status AND e.isDeleted = :isDeleted")
     List<Employee> findByStatusAndIsDeletedd(String status,boolean isDeleted);
+    Employee findByName(String name);
 
 }

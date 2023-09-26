@@ -1,11 +1,18 @@
 package com.eidiko.service;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.eidiko.entity.Employee;
@@ -16,10 +23,11 @@ import com.eidiko.repository.ShiftTimingRepository;
 import com.eidiko.userRequest.EmployeUserRequest;
 import com.eidiko.userRequest.ShiftTimingUserRequest;
 
-import jakarta.validation.Valid;
-
 @Service
-public class EmployeeServiceImpl implements EmployeeService {
+public class EmployeeServiceImpl implements EmployeeService,UserDetailsService {
+	
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	@Autowired
 	private EmployeeRepository employeeRepository;
@@ -62,7 +70,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 		// TODO Auto-generated method stu
 			//"inactive".equals(user.getStatus()) ? true : false
 			Employee employe=new Employee(user.getId(), user.getName(), user.getEmail(), user.getDateJoin(), user.getMobile(),user.getStatus(),	"inactive".equals(user.getStatus()) ? true : false , user.getAbout());
+			employe.setDesignations(user.getDesignations());
+			employe.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 			employeeRepository.save(employe);
+		
 			addShiftTimingToEmployee(employe.getId(),user.getShiftTimings());
 			return employeeRepository.save(employe);
 	}
@@ -167,5 +178,33 @@ public class EmployeeServiceImpl implements EmployeeService {
 	public List<?> gettodatShiftEmployes() {
 		// TODO Auto-generated method stub
 		return employeeRepository.findByStatusAndIsDeletedd("active",false);
+	}
+//	@Override
+//	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//		// TODO Auto-generated method stub
+//	Employee employe=employeeRepository.findByName(username);
+//	if(employe==null)throw new UsernameNotFoundException("username not found");
+//	List<GrantedAuthority> authorities=employe.getDesignations().stream().map(role->
+//	new SimpleGrantedAuthority(role)).collect(Collectors.toList());
+//		return new User(username, employe.getPassword(), authorities);
+//	}
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+	    Employee employee = employeeRepository.findByName(username);
+	    
+	    if (employee == null) {
+	        throw new UsernameNotFoundException("Username not found: " + username);
+	    }
+	    
+	    List<GrantedAuthority> authorities = employee.getDesignations()
+	            .stream()
+	            .map(role -> new SimpleGrantedAuthority(role)) // Assuming roles are prefixed with "ROLE_"
+	            .collect(Collectors.toList());
+	    
+	    return User.builder()
+	            .username(username)
+	            .password(employee.getPassword())
+	            .authorities(authorities)
+	            .build();
 	}
 }

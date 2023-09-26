@@ -5,21 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.bind.DefaultValue;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import com.eidiko.entity.ShiftTiming;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import lombok.Builder.Default;
 import lombok.Data;
 
 @Data
@@ -42,6 +32,12 @@ public class EmployeUserRequest {
 	    private String status="active"; 
 	    private boolean isDeleted;
 	    private String about;
+	    @NotEmpty(message = "designation must not empty")
+	    private List<String> designations;
+	    @NotNull(message="password  must not null")
+	    @Pattern(regexp="^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*~!]).{8,}$",message = "password must size greater than 8, atleast one cpatial and one small and one digit and one special character ")
+		private String password;
+
 	    private List<ShiftTimingUserRequest> shiftTimings = new ArrayList<>();
 	    
 		public EmployeUserRequest() {
@@ -136,5 +132,22 @@ public class EmployeUserRequest {
 		public void setShiftTimings(List<ShiftTimingUserRequest> shiftTimings) {
 			this.shiftTimings = shiftTimings;
 		}
+
+		public List<String> getDesignations() {
+			return designations;
+		}
+
+		public void setDesignations(List<String> designations) {
+			this.designations = designations;
+		}
+
+		public String getPassword() {
+			return password;
+		}
+
+		public void setPassword(String password) {
+			this.password = password;
+		}
+		
 	    
 }
