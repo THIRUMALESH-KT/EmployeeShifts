@@ -19,12 +19,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.eidiko.entity.UserRequest;
 import com.eidiko.exception.UserNotFoundException;
 import com.eidiko.service.EmployeeService;
 import com.eidiko.userRequest.EmployeUserRequest;
 import com.eidiko.userRequest.ShiftTimingUserRequest;
-import com.eidiko.util.jwtUtil;
 
 import jakarta.validation.Valid;
 
@@ -34,8 +32,7 @@ public class EmployeController {
 	private EmployeeService empservice;
 	@Autowired
 	private AuthenticationManager authenticationManager;
-	@Autowired
-	private jwtUtil jwtUtil;
+	
 	//for getting all active employees
 	@GetMapping("/activeEmployes")
 	public ResponseEntity<Map<String,Object>> getActiveEmployeesByHr() throws UserNotFoundException{
@@ -192,12 +189,12 @@ public class EmployeController {
 		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);  
 	}
 	@GetMapping("/login")
-	public ResponseEntity<Map<String,Object>> login(@Valid @RequestBody UserRequest user){
-		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
-		String token=jwtUtil.generateTocken(user.getUsername());
+	public ResponseEntity<Map<String,Object>> login( @RequestBody EmployeUserRequest user){
+//		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+//		String token=jwtUtil.generateTocken(user.getUsername());
 		Map<String,Object> map=new HashMap<>();
 		map.put("result", "success");
-		map.put("token", token);
+//		map.put("token", token);
 		map.put("statuc", String.valueOf(HttpStatus.OK));
 		return ResponseEntity.ok(map);
 		
