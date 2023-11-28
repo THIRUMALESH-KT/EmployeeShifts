@@ -211,9 +211,14 @@ public class EmployeController {
 		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK	);
 	}
 	@GetMapping("/generateToken")
-	public ResponseEntity<Object> generateToken(@RequestBody com.eidiko.userRequest.AuthRequest request) throws AuthenticationException{
+	public ResponseEntity<Map<String, Object>> generateToken(@RequestBody com.eidiko.userRequest.AuthRequest request) throws AuthenticationException{
 		System.out.println("entering into generateToken() fist method");
-		return new ResponseEntity<Object>(authenticationService.authenticate(request),HttpStatus.OK);
+		Map<String,Object> map=new HashMap<>();
+		map.put("result", "sucess");
+		map.put("Massage",authenticationService.authenticate(request) );
+		map.put("status",  String.valueOf(HttpStatus.OK.value()));
+		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK	);
+		
 	}
 	@GetMapping("/AccessDenied")
 	public Map<String,Object> accessDenide(){

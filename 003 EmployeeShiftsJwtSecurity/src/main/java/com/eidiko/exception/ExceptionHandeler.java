@@ -1,33 +1,98 @@
 package com.eidiko.exception;
 
+
+import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
-import javax.naming.AuthenticationException;
+import javax.swing.RepaintManager;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.context.request.WebRequest;
 
+
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.security.SignatureException;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestControllerAdvice
+@Slf4j
+public class ExceptionHandeler  {
+	 @ExceptionHandler(HttpClientErrorException.class)
+	    public ResponseEntity<Object> handleHttpClientErrorException(HttpClientErrorException ex) {
+	        // Extract the error response from the exception
+	     log.info("inside ********* handleHttpClientErrorException");  
+	       Map<String , Object>  obj= ex.getResponseBodyAs(LinkedHashMap.class);
+	     return ResponseEntity.badRequest().body(obj);
 
-public class ExceptionHandeler {
-	 @ExceptionHandler(io.jsonwebtoken.ExpiredJwtException.class)
-	 public ResponseEntity<Map<String, String>> ExpiredJwtException(io.jsonwebtoken.ExpiredJwtException ex){
-			Map<String,String> errorsMap=new HashMap<>();
-	    	errorsMap.put("result", "failed");
-	    	errorsMap.put("error Message [ "+ex.getClass()+" ]", ex.getLocalizedMessage());
-	    	errorsMap.put("statuc",String.valueOf(HttpStatus.BAD_REQUEST.value()));
-	    	return new ResponseEntity<Map<String,String>>(errorsMap,HttpStatus.BAD_REQUEST);
-	 }
+	    }
+
+
 	
+    @ExceptionHandler(value = {ExpiredJwtException.class})
+    @ResponseBody
+    public ResponseEntity<Map<String,Object>> handleExpiredJwtException(ExpiredJwtException ex, WebRequest request) {
+        log.info("********** inside ExpiredJwtException");
+
+        Map<String , Object> map=new LinkedHashMap<>();
+    	map.put("message ","Failed");
+    	map.put("result ", ex.getLocalizedMessage());
+    	map.put("status" , HttpStatus.BAD_REQUEST);
+    	map.put("statusCode", HttpStatus.BAD_REQUEST.value());
+    	return new  ResponseEntity<Map<String,Object>>(map,HttpStatus.BAD_REQUEST);
+    }
+
+
+    @ExceptionHandler(value = {SignatureException.class})
+    public ResponseEntity<Map<String, Object>> JwtException(SignatureException ex, WebRequest request) {
+   	 log.info("********** inside SignatureException");
+
+   	 Map<String , Object> map=new LinkedHashMap<>();
+ 	map.put("message ","Failed");
+ 	map.put("result ", ex.getLocalizedMessage());
+ 	map.put("status" , HttpStatus.BAD_REQUEST);
+ 	map.put("statusCode", HttpStatus.BAD_REQUEST.value());
+ 	return new  ResponseEntity<Map<String,Object>>(map,HttpStatus.BAD_REQUEST);
+		}
+    @ExceptionHandler(value = {MalformedJwtException.class})
+    public ResponseEntity<Map<String, Object>> MalformedJwtException(MalformedJwtException ex, WebRequest request) {
+   	 log.info("********** inside MalformedJwtException");
+   	 Map<String , Object> map=new LinkedHashMap<>();
+ 	map.put("message ","Failed");
+ 	map.put("result ", ex.getLocalizedMessage());
+ 	map.put("status" , HttpStatus.BAD_REQUEST);
+ 	map.put("statusCode", HttpStatus.BAD_REQUEST.value());
+ 	return new  ResponseEntity<Map<String,Object>>(map,HttpStatus.BAD_REQUEST);
+		}
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Map<String , Object>> Exception(Exception ex){
+   	 log.info("********** inside Exception");
+
+    	Map<String , Object> map=new LinkedHashMap<>();
+    	map.put("message ","Failed");
+    	map.put("result ", ex.getLocalizedMessage());
+    	map.put("status" , HttpStatus.BAD_REQUEST);
+    	map.put("statusCode", HttpStatus.BAD_REQUEST.value());
+    	return new  ResponseEntity<Map<String,Object>>(map,HttpStatus.BAD_REQUEST);
+    }
+
+
+
 	    @ExceptionHandler({MethodArgumentNotValidException.class,})
 	   public Map<String,String> validateException(MethodArgumentNotValidException ex){
 		 
@@ -85,17 +150,6 @@ public class ExceptionHandeler {
 	    	errorsMap.put("statuc",String.valueOf(HttpStatus.BAD_REQUEST.value()));
 	    	return errorsMap;
 	 }	
-	 @ExceptionHandler(Exception.class)
-	 public Map<String,String> HandleException(Exception ex){
-		 Map<String,String> errorsMap=new HashMap<>();
-	    	errorsMap.put("result", "failed");
-
-	    	errorsMap.put("error messagee", ex.getLocalizedMessage());
-	    	errorsMap.put("total message", ex.toString());
-	  
-	        errorsMap.put("status", String.valueOf(HttpStatus.BAD_REQUEST.value()));
-
-	        return errorsMap;
-	 }
+	
 	 	
 }
